@@ -1,53 +1,32 @@
+#![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 #![allow(non_snake_case)]
 
-use dioxus::prelude::*;
-use tracing::Level;
+mod app;
+mod theme;
+mod diff;
+use app::App;
+use macroquad::prelude::*;
 
-#[derive(Clone, Routable, Debug, PartialEq)]
-enum Route {
-    #[route("/")]
-    Home {},
-    #[route("/blog/:id")]
-    Blog { id: i32 },
-}
-
-fn main() {
-    // Init logger
-    dioxus_logger::init(Level::INFO).expect("failed to init logger");
-
-    dioxus::launch(App);
-}
-
-#[component]
-fn App() -> Element {
-    rsx! {
-        Router::<Route> {}
+fn window() -> Conf {
+    Conf {
+        window_width: 800,
+        window_height: 600,
+        window_title: "Compa".to_owned(),
+        high_dpi: true,
+        ..Default::default()
     }
 }
 
-#[component]
-fn Blog(id: i32) -> Element {
-    rsx! {
-        Link { to: Route::Home {}, "Go to counter" }
-        "Blog post {id}"
-    }
-}
+#[macroquad::main(window)]
+async fn main() {
+    let mut app = App::default();
 
-#[component]
-fn Home() -> Element {
-    let mut count = use_signal(|| 0);
-
-    rsx! {
-        Link {
-            to: Route::Blog {
-                id: count()
-            },
-            "Go to blog"
+    loop {
+        app.update_file_dialog();
+        if app.file_dialog().is_none() {
+            app.update();
         }
-        div {
-            h1 { "High-Five counter: {count}" }
-            button { onclick: move |_| count += 1, "Up high!" }
-            button { onclick: move |_| count -= 1, "Down low!" }
-        }
+        app.draw();
+        next_frame().await;
     }
 }
