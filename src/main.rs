@@ -4,6 +4,7 @@
 mod app;
 mod theme;
 mod diff;
+mod ui;
 use app::App;
 use macroquad::prelude::*;
 
@@ -19,7 +20,7 @@ fn window() -> Conf {
 
 #[macroquad::main(window)]
 async fn main() {
-    let mut app = App::default();
+    let mut app = App::new();
 
     loop {
         app.update_file_dialog();
