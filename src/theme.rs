@@ -1,6 +1,6 @@
 pub mod window {
     use macroquad::color::Color;
-    pub const BG_COLOR: Color = Color::new(0.11, 0.12, 0.11, 1.0);
+    pub const BG_COLOR: Color = Color::new(0.1137, 0.1254, 0.1294, 1.0);
     pub const SEP_COLOR: Color = Color::new(0.3, 0.4, 0.45, 1.0);
 }
 
